@@ -2,6 +2,15 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-	<RuntimeIdentifiers>win10-x64;debian.8-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;debian.8-x64</RuntimeIdentifiers>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="javalibs\lib\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="javalibs\lib\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="javalibs\lib\**" />
+  </ItemGroup>
 </Project>
