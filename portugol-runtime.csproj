@@ -5,12 +5,17 @@
     <RuntimeIdentifiers>win-x64;debian.8-x64</RuntimeIdentifiers>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="javalibs\lib\**" />
+    <EmbeddedResource Include="javalibs\antlr-runtime-3.4.jar">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="javalibs\jlayer-1.0.1.jar">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="javalibs\portugol-nucleo.jar">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Remove="javalibs\lib\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="javalibs\lib\**" />
+    <None Include="javalibs\**" />
   </ItemGroup>
 </Project>
