@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 
@@ -7,28 +9,48 @@ namespace portugol_runtime
 {
     class Program
     {
-
-        private static void portugolrun(String filepath)
+        private static bool Filter(string filepath)
         {
-            Console.WriteLine("Iniciando Portugol...");
-            Process proc = new Process();  
-            ProcessStartInfo startInfo = new ProcessStartInfo();  
-            //startInfo.Arguments = @"-cp C:\ Test C:\test.txt";  
-            startInfo.FileName = "python";  
-            proc.StartInfo = startInfo;
-            new Thread(() => 
+            var texto = System.IO.File.ReadAllText(filepath);
+            var reservadas = new List<string>{ "~|^!+RUNTIME+!^|~", "~|^!+START+!^|~", "~|^!+END+!^|~", "~|^!+INPUT+!^|~", "~|^!+LIMPA+!^|~", "~|^!+SETIP+!^|~" };
+            if (reservadas.Any(texto.Contains))
             {
-                Thread.CurrentThread.IsBackground = true; 
-                Thread.Sleep(1000);
-                if(!proc.WaitForExit(5000))
-                { 
+                throw new InvalidOperationException("Código em Portugol contêm palavras reservadas do Webstudio");
+            }
+            return true;
+        }
+        private static void Portugolrun(string filepath)
+        {
+            try
+            {
+                if (!Filter(filepath)) return;
+                Console.WriteLine("Iniciando Portugol...");
+                var proc = new Process();
+                var startInfo = new ProcessStartInfo
+                {
+                    Arguments = @"java -Dfile.encoding=UTF-8 -Xms128m -Xmx512m -d64 -jar " +
+                                AppDomain.CurrentDomain.BaseDirectory + "jarlibs\\portugol-console.jar" + "\"\"" + 
+                                filepath + "\"\"",
+                    FileName = "java"
+                };
+
+                proc.StartInfo = startInfo;
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    Thread.Sleep(1000);
+                    if (proc.WaitForExit(500000)) return;
                     proc.Kill();
-                    Console.WriteLine("\nERRO >> Você demorou demais para responder (timeout)");
+                    Console.WriteLine("\nERRO >> Execuções com Portugol estão limitadas a 5 minutos (timeout)");
                     Thread.CurrentThread.Interrupt();
-                }
-            }).Start();
-            proc.Start();
-            proc.WaitForExit();
+                }).Start();
+                proc.Start();
+                proc.WaitForExit();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("\nERRO >> {0}", e);
+            }
         }
         static void Main(string[] args)
         {
@@ -39,7 +61,7 @@ namespace portugol_runtime
                 if (comando.Contains("~|^!+RUNTIME+!^|~"))
                 {
                     Console.WriteLine("~|^!+START+!^|~");
-                    portugolrun(comando.Replace("~|^!+START+!^|~", ""));
+                    Portugolrun(comando.Replace("~|^!+RUNTIME+!^|~", ""));
                     Console.WriteLine("~|^!+END+!^|~");
                 }
             }
