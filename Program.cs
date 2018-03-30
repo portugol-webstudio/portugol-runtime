@@ -58,12 +58,10 @@ namespace portugol_runtime
             while (true)
             {
                 var comando = Console.ReadLine();
-                if (comando.Contains("~|^!+RUNTIME+!^|~"))
-                {
-                    Console.WriteLine("~|^!+START+!^|~");
-                    Portugolrun(comando.Replace("~|^!+RUNTIME+!^|~", ""));
-                    Console.WriteLine("~|^!+END+!^|~");
-                }
+                if (!comando.Contains("~|^!+RUNTIME+!^|~")) continue;
+                Console.WriteLine("~|^!+START+!^|~");
+                Portugolrun(comando.Replace("~|^!+RUNTIME+!^|~", ""));
+                Console.WriteLine("~|^!+END+!^|~");
             }
         }
     }
