@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -62,6 +63,10 @@ namespace portugol_runtime
                 Console.WriteLine("~|^!+START+!^|~");
                 Portugolrun(comando.Replace("~|^!+RUNTIME+!^|~", ""));
                 Console.WriteLine("~|^!+END+!^|~");
+                if (File.Exists(comando.Replace("~|^!+RUNTIME+!^|~", "")))
+                {
+                    File.Delete(comando.Replace("~|^!+RUNTIME+!^|~", ""));
+                }
             }
         }
     }
