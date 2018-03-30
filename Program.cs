@@ -12,7 +12,7 @@ namespace portugol_runtime
     {
         private static bool Filter(string filepath)
         {
-            var texto = System.IO.File.ReadAllText(filepath);
+            var texto = File.ReadAllText(filepath);
             var reservadas = new List<string>{ "~|^!+RUNTIME+!^|~", "~|^!+START+!^|~", "~|^!+END+!^|~", "~|^!+INPUT+!^|~", "~|^!+LIMPA+!^|~", "~|^!+SETIP+!^|~" };
             if (reservadas.Any(texto.Contains))
             {
